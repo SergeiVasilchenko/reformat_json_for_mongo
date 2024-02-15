@@ -1,6 +1,6 @@
 import json
 
-
+# Input data from a file being read
 with open('new_data.json', 'r', encoding='utf-8') as file:
     original_json = file.read()
 
@@ -11,7 +11,8 @@ data = json.loads(original_json)
 formatted_data_list = []
 
 for container in data['containers_list']:
-
+    # handle the case when the input data
+    # contains either a list of strings or one string
     if isinstance(container["comment"], list):
         tags = [comment.strip(" -") for comment in container["comment"][:-1]]
     else:
@@ -20,7 +21,6 @@ for container in data['containers_list']:
     formatted_data = {
         "address": container["location"]["address"],
         "location": container["location"]["pos"].split(","),
-        # условие для tag соответствует только случаю когда в значении передан список
         "tags": tags,
         "types": {
             "wastepaper": ["wastepaper"],
@@ -32,6 +32,6 @@ for container in data['containers_list']:
     }
     formatted_data_list.append(formatted_data)
 
-# Output the formatted data as JSON
+# Output the formatted data as JSON into a new file
 with open('formatted_data.json', 'w', encoding='utf-8') as f:
     f.write(json.dumps(formatted_data_list, ensure_ascii=False, indent=4))
